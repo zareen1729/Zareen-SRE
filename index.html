@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Personal Portfolio</title>
+  <meta name="description" content="A clean, responsive personal portfolio built with pure HTML, CSS, and JavaScript." />
+  <meta name="theme-color" content="#0ea5e9" />
+  <style>
+    /* -----------------------------
+       Base + Theme Variables
+    ------------------------------*/
+    :root{
+      --bg: #ffffff;
+      --bg-elev: #f8fafc;
+      --text: #0f172a;
+      --muted: #475569;
+      --primary: #0ea5e9; /* sky-500 */
+      --primary-600: #0284c7;
+      --accent: #22c55e;  /* green-500 */
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --shadow: 0 10px 18px rgba(2,8,23,0.08);
+      --radius: 16px;
+    }
+    html[data-theme="dark"]{
+      --bg: #0b1220;
+      --bg-elev: #0f172a;
+      --text: #e2e8f0;
+      --muted: #a7b0be;
+      --primary: #38bdf8; /* sky-400 */
+      --primary-600: #0ea5e9;
+      --accent: #34d399;
+      --card: #0b1220;
+      --border: #1f2937;
+      --shadow: 0 10px 18px rgba(0,0,0,0.35);
+    }
+    @media (prefers-color-scheme: dark){
+      html[data-theme="auto"]{ color-scheme: dark light; }
+    }
+
+    /* -----------------------------
+       Reset + Typography
+    ------------------------------*/
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    h1,h2,h3{ line-height:1.2; margin:0 0 .6rem; }
+    h1{ font-size: clamp(2rem, 1.2rem + 3vw, 3.4rem); }
+    h2{ font-size: clamp(1.4rem, 1rem + 1.5vw, 2rem); }
+    p{ margin: 0 0 1rem; color: var(--muted); }
+    a{ color: var(--primary); text-decoration: none; }
+    a:hover{ text-decoration: underline; }
+
+    /* -----------------------------
+       Layout Helpers
+    ------------------------------*/
+    .container{ max-width: 1100px; margin-inline: auto; padding: 0 1rem; }
+    .section{ padding: 4rem 0; }
+    .grid{ display: grid; gap: 1.25rem; }
+
+    /* -----------------------------
+       Header + Nav
+    ------------------------------*/
+    header{
+      position: sticky; top:0; z-index: 50;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: saturate(180%) blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    html[data-theme="dark"] header{ background: rgba(11,18,32,0.65); }
+
+    .nav{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+    .brand{ display:flex; align-items:center; gap:.6rem; font-weight:700; letter-spacing:.3px; }
+    .brand .logo{ width:30px; height:30px; border-radius:50%; background: linear-gradient(135deg, var(--primary), var(--accent)); box-shadow: var(--shadow); }
+
+    .links{ display:flex; gap:1rem; align-items:center; }
+    .links a{ padding:.4rem .6rem; border-radius:10px; }
+    .links a:hover{ background: var(--bg-elev); text-decoration:none; }
+
+    .nav-actions{ display:flex; gap:.5rem; align-items:center; }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+      padding:.55rem .9rem; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--card); color: var(--text); box-shadow: var(--shadow);
+    }
+    .btn.primary{ background: var(--primary); color: white; border-color: transparent; }
+    .btn.primary:hover{ background: var(--primary-600); }
+
+    .hamburger{ display:none; width:40px; height:40px; border-radius:10px; border:1px solid var(--border); background:var(--card); align-items:center; justify-content:center; }
+    .hamburger svg{ width:22px; height:22px; }
+
+    @media (max-width:860px){
+      .links{ display:none; position:absolute; top:64px; left:0; right:0; padding: .75rem 1rem; background: var(--bg); border-bottom:1px solid var(--border); }
+      html[data-theme="dark"] .links{ background: var(--bg-elev); }
+      .links.open{ display:flex; flex-direction:column; }
+      .hamburger{ display:flex; }
+    }
+
+    /* -----------------------------
+       Zareen Khan
+    ------------------------------*/
+    .hero{ display:grid; grid-template-columns: 1.2fr .8fr; align-items:center; gap:2rem; padding: 3rem 0 2rem; }
+    .hero .badge{ display:inline-flex; gap:.5rem; align-items:center; padding:.3rem .6rem; border:1px solid var(--border); border-radius:999px; background:var(--card); color: var(--muted); font-size:.9rem; }
+    .hero .cta{ display:flex; gap:.75rem; margin-top:1.2rem; flex-wrap: wrap; }
+    .hero-visual{ aspect-ratio: 1 / 1; border-radius: var(--radius); background: radial-gradient(1200px 600px at 10% 20%, rgba(14,165,233,0.25), transparent),
+                  linear-gradient(135deg, rgba(34,197,94,0.18), rgba(14,165,233,0.18));
+                  border:1px solid var(--border); box-shadow: var(--shadow); display:grid; place-items:center; }
+    .hero-visual .ring{ width:60%; aspect-ratio:1/1; border-radius:50%; border:2px dashed var(--primary); display:grid; place-items:center; animation: spin 20s linear infinite; }
+    .hero-visual .dot{ width:16px; height:16px; border-radius:50%; background: var(--primary); box-shadow: 0 0 0 10px rgba(14,165,233,.15); }
+    @keyframes spin{ from{ transform: rotate(0)} to{ transform: rotate(360deg)} }
+
+    @media (max-width:860px){ .hero{ grid-template-columns: 1fr; } }
+
+    /* -----------------------------
+       Cards + Tags
+    ------------------------------*/
+    .card{ background: var(--card); border:1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding:1rem; }
+    .card h3{ margin-top:.25rem; }
+    .tag{ display:inline-flex; align-items:center; padding:.25rem .5rem; border-radius:999px; background: var(--bg-elev); border:1px solid var(--border); font-size:.85rem; color:var(--muted); }
+    .tags{ display:flex; gap:.5rem; flex-wrap: wrap; }
+
+    /* -----------------------------
+       Skills Grid
+    ------------------------------*/
+    .skills{ grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    .skill{ display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding:.75rem 1rem; }
+
+    /* -----------------------------
+       Projects Grid
+    ------------------------------*/
+    .projects{ grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .project-thumb{ height:140px; border-radius:12px; background: linear-gradient(135deg, rgba(14,165,233,.25), rgba(34,197,94,.25)); border:1px solid var(--border); display:grid; place-items:center; color:var(--muted); font-weight:600; margin-bottom:.75rem; }
+    .project-actions{ display:flex; gap:.5rem; flex-wrap:wrap; }
+
+    /* -----------------------------
+       Timeline (Experience)
+    ------------------------------*/
+    .timeline{ position:relative; padding-left:1rem; }
+    .timeline:before{ content:""; position:absolute; top:0; bottom:0; left:8px; width:2px; background: var(--border); }
+    .timeline-item{ position:relative; padding-left:1.25rem; margin-bottom:1.25rem; }
+    .timeline-item:before{ content:""; position:absolute; left:0; top:.4rem; width:14px; height:14px; border-radius:50%; background: var(--primary); box-shadow: 0 0 0 4px rgba(14,165,233,.15); }
+
+    /* -----------------------------
+       Contact Form
+    ------------------------------*/
+    form{ display:grid; gap:.75rem; }
+    input, textarea{ width:100%; padding:.75rem .9rem; border:1px solid var(--border); border-radius:12px; background: var(--bg); color: var(--text); }
+    textarea{ min-height:120px; resize: vertical; }
+
+    /* -----------------------------
+       Footer
+    ------------------------------*/
+    footer{ border-top:1px solid var(--border); padding:2rem 0; }
+    .social{ display:flex; gap:.75rem; align-items:center; }
+    .social a{ display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:10px; border:1px solid var(--border); background: var(--card); }
+    .copyright{ color: var(--muted); font-size:.95rem; }
+
+    /* Animations */
+    .fade-in{ opacity:0; transform: translateY(14px); animation: fadeUp .7s ease forwards; }
+    .fade-in.d2{ animation-delay: .15s; }
+    .fade-in.d3{ animation-delay: .3s; }
+    @keyframes fadeUp{ to{ opacity:1; transform: translateY(0)} }
+  </style>
+</head>
+<body>
+  <!-- ============================
+       Header / Navigation
+  ============================= -->
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#home" aria-label="Home">
+        <span class="logo" aria-hidden="true"></span>
+        <span>My Portfolio</span>
+      </a>
+      <nav id="nav-links" class="links" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#experience">Experience</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <button id="theme-toggle" class="btn" aria-label="Toggle color theme" title="Toggle theme">
+          <!-- Sun/Moon icons -->
+          <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zm10.48 14.32l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM12 4V1h-0v3h0zm0 19v-3h0v3h0zM4 12H1v0h3v0zm19 0h-3v0h3v0zM6.76 19.16l-1.42 1.42-1.79-1.8 1.41-1.41 1.8 1.79zM19.16 6.76l1.42-1.42 1.8 1.79-1.41 1.41-1.81-1.78zM12 6a6 6 0 100 12A6 6 0 0012 6z"/></svg>
+          <svg id="icon-moon" style="display:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/></svg>
+        </button>
+        <button id="hamburger" class="hamburger" aria-label="Open menu" aria-controls="nav-links" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="home" class="container">
+    <!-- ============================
+         Hero
+    ============================= -->
+    <section class="hero section fade-in">
+      <div>
+        <span class="badge">👋 Hello! I'm <strong>Zareen Khane</strong></span>
+        <h1>Systems & ML Engineer building reliable, elegant software.</h1>
+        <p>Focus on low-level systems, edge AI, and pragmatic developer tooling. I enjoy turning complex problems into simple, performant products.</p>
+        <div class="cta">
+          <a class="btn primary" href="#projects">View Projects</a>
+          <a class="btn" href="#contact">Contact Me</a>
+        </div>
+      </div>
+      <div class="hero-visual fade-in d2" aria-hidden="true">
+        <div class="ring"><div class="dot"></div></div>
+      </div>
+    </section>
+
+    <!-- ============================
+         About
+    ============================= -->
+    <section id="about" class="section">
+      <div class="grid" style="grid-template-columns: 1fr 1fr; align-items:start;">
+        <div class="card fade-in">
+          <h2>About</h2>
+          <p>I'm a software engineer with deep experience in systems programming (C/C++), networking, and applied machine learning. I've built router firmware, telemetry pipelines, and production LLM features. I value clean architecture, profiling-first performance, and thoughtful DX.</p>
+          <div class="tags" style="margin-top:.5rem">
+            <span class="tag">C/C++</span>
+            <span class="tag">Python</span>
+            <span class="tag">Linux</span>
+            <span class="tag">Edge AI</span>
+            <span class="tag">Cloud</span>
+          </div>
+        </div>
+        <div class="card fade-in d2">
+          <h2>Highlights</h2>
+          <ul style="margin: .25rem 0 0 1rem; color: var(--muted);">
+            <li>Optimized inference pipelines (Quantization, vLLM, ONNX Runtime).</li>
+            <li>Designed read‑through caches, rate limiting, and reliable messaging.</li>
+            <li>Built firmware for OpenWRT-based routers with sandboxed parental controls.</li>
+            <li>Led feature delivery across cloud + embedded + ML teams.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================
+         Skills
+    ============================= -->
+    <section id="skills" class="section">
+      <h2 class="fade-in">Skills</h2>
+      <div class="grid skills" style="margin-top:1rem;">
+        <div class="card skill fade-in"><span>Languages</span><strong>C/C++, Python, JS/TS</strong></div>
+        <div class="card skill fade-in d2"><span>Systems</span><strong>Linux, Networking, eBPF</strong></div>
+        <div class="card skill fade-in d3"><span>AI/ML</span><strong>PyTorch, ONNX, RAG</strong></div>
+        <div class="card skill fade-in"><span>Cloud</span><strong>AWS, Docker, K8s</strong></div>
+        <div class="card skill fade-in d2"><span>Data</span><strong>Kafka, Redis, Postgres</strong></div>
+        <div class="card skill fade-in d3"><span>Tooling</span><strong>Git, CI/CD, Profilers</strong></div>
+      </div>
+    </section>
+
+    <!-- ============================
+         Projects
+    ============================= -->
+    <section id="projects" class="section">
+      <h2 class="fade-in">Projects</h2>
+      <div class="grid projects" style="margin-top:1rem;">
+        <article class="card fade-in">
+          <div class="project-thumb">Project Image</div>
+          <h3>Code Review Assistant</h3>
+          <p>Static analysis + LLM suggestions with license/BOM checks. Folder uploads processed task-by-task, returning rich per-file reports.</p>
+          <div class="tags" style="margin:.5rem 0 .75rem">
+            <span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">LLM</span>
+          </div>
+          <div class="project-actions">
+            <a class="btn" href="#" onclick="alert('Replace with GitHub URL')">GitHub</a>
+            <a class="btn" href="#" onclick="alert('Replace with live demo URL')">Live Demo</a>
+          </div>
+        </article>
+        <article class="card fade-in d2">
+          <div class="project-thumb">Project Image</div>
+          <h3>Vehicle Tracker</h3>
+          <p>AWS API Gateway + Lambda + LocationIQ to locate vehicles and trigger theft alerts with map visualization.</p>
+          <div class="tags" style="margin:.5rem 0 .75rem">
+            <span class="tag">AWS</span><span class="tag">Lambda</span><span class="tag">Maps</span>
+          </div>
+          <div class="project-actions">
+            <a class="btn" href="#">Case Study</a>
+          </div>
+        </article>
+        <article class="card fade-in d3">
+          <div class="project-thumb">Project Image</div>
+          <h3>Edge Malware Sandbox</h3>
+          <p>KVM-based sandbox with virtual disk for guest-host comms using tmpfs; similarity search detects variants quickly.</p>
+          <div class="tags" style="margin:.5rem 0 .75rem">
+            <span class="tag">C++</span><span class="tag">KVM</span><span class="tag">IR</span>
+          </div>
+          <div class="project-actions">
+            <a class="btn" href="#">Write-up</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============================
+         Experience
+    ============================= -->
+    <section id="experience" class="section">
+      <h2 class="fade-in">Experience</h2>
+      <div class="card fade-in d2">
+        <ol class="timeline">
+          <li class="timeline-item">
+            <h3>Senior Software Engineer — Company ABC</h3>
+            <p>2022 – Present • Led ML inference optimizations and platform reliability; reduced p95 latency by 37%.</p>
+          </li>
+          <li class="timeline-item">
+            <h3>Systems Engineer — Company XYZ</h3>
+            <p>2018 – 2022 • Built router firmware modules, parental controls, and OTA update system.</p>
+          </li>
+          <li class="timeline-item">
+            <h3>Embedded Developer — Startup 123</h3>
+            <p>2015 – 2018 • Delivered telemetry pipelines and on-device analytics for edge devices.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============================
+         Contact
+    ============================= -->
+    <section id="contact" class="section">
+      <div class="grid" style="grid-template-columns: 1.1fr .9fr; align-items:start;">
+        <div class="card fade-in">
+          <h2>Contact</h2>
+          <p>Interested in collaborating or have a role in mind? Send a message and I'll get back to you.</p>
+          <form id="contact-form">
+            <div>
+              <label for="name" style="display:block; margin-bottom:.25rem;">Name</label>
+              <input id="name" name="name" type="text" placeholder="Zareen Khan" required />
+            </div>
+            <div>
+              <label for="email" style="display:block; margin-bottom:.25rem;">Email</label>
+              <input id="email" name="email" type="email" placeholder="zareen1729@gmail.com" required />
+            </div>
+            <div>
+              <label for="message" style="display:block; margin-bottom:.25rem;">Message</label>
+              <textarea id="message" name="message" placeholder="I’m Zareen Khan, a passionate and results-driven Site Reliability Engineer (SRE) with over 10 years of experience as a DevOps engineer. Currently, I work at Cisco, where I’ve been part of the SRE team for more than 3 years, contributing to the reliability, scalability and performance of critical systems.
+
+My professional journey includes roles at leading organizations like Comcast, McAfee, and CVS Health, where I developed a strong foundation in DevOps practices, CI/CD pipelines, cloud platforms, infrastructure automation and system monitoring. This diverse experience has enabled me to tackle complex technical challenges and drive continuous improvements in system architecture and operational efficiency.
+
+With over a decade of expertise, I’ve honed my skills in building scalable, efficient, and innovative solutions. Based in the vibrant California Bay Area, I am deeply passionate about technology and its power to shape the future. An enthusiastic and lifelong learner, I thrive on exploring new tools and methodologies, always seeking ways to improve and optimize workflows.
+
+My commitment to sharing knowledge is at the core of my mission—empowering others to grow and succeed in their careers. Believing in the transformative impact of knowledge sharing, I strive to make a difference in society, not just through my work but by nurturing a community of continuous learning and collaboration.
+
+I’m dedicated to driving operational excellence, fostering a culture of reliability and continuously learning to stay ahead in the evolving landscape of DevOps and SRE." required></textarea>
+            </div>
+            <button type="submit" class="btn primary">Send</button>
+          </form>
+        </div>
+        <div class="card fade-in d2">
+          <h2>Links</h2>
+          <div class="social" style="margin-top:.5rem;">
+            <a href="#" aria-label="GitHub">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 .5a12 12 0 00-3.79 23.4c.6.11.82-.26.82-.58v-2.1c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.09 1.85 1.24 1.85 1.24 1.07 1.84 2.8 1.31 3.48 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.51.12-3.15 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 016 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.64.24 2.85.12 3.15.77.84 1.24 1.91 1.24 3.22 0 4.62-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22v3.3c0 .32.22.7.82.58A12 12 0 0012 .5z"/></svg>
+            </a>
+            <a href="#" aria-label="LinkedIn">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM.5 8.5h4V23h-4V8.5zm7 0h3.8v2h.05c.53-1 1.85-2 3.8-2 4.06 0 4.8 2.67 4.8 6.13V23h-4v-6.5c0-1.55-.03-3.55-2.17-3.55-2.17 0-2.5 1.7-2.5 3.45V23h-4V8.5z"/></svg>
+            </a>
+            <a href="#" aria-label="Email">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 13L2 6.76V18a2 2 0 002 2h16a2 2 0 002-2V6.76L12 13z"/><path d="M12 11l10-6H2l10 6z"/></svg>
+            </a>
+          </div>
+          <p style="margin-top:1rem">Replace the links above with your profiles. You can also add a downloadable resume.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
+      <div class="copyright">© <span id="year"></span> Zareen Khan. All rights reserved.</div>
+      <a href="#home" class="btn" aria-label="Back to top">↑ Back to top</a>
+    </div>
+  </footer>
+</body>
+</html>
